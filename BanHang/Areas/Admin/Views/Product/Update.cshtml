@@ -1,0 +1,214 @@
+﻿@model BanHang.Models.Product
+@{
+    ViewData["Title"] = "Cập nhật sản phẩm";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-primary">
+                <i class="fas fa-edit"></i> Cập nhật sản phẩm
+            </h2>
+            <p class="text-muted">Chỉnh sửa thông tin sản phẩm: <strong>@Model.Name</strong></p>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-edit"></i> Thông tin sản phẩm</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Update" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Name" class="form-label fw-bold">
+                                        <i class="fas fa-tag text-primary"></i> Tên sản phẩm *
+                                    </label>
+                                    <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm..." />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Price" class="form-label fw-bold">
+                                        <i class="fas fa-dollar-sign text-success"></i> Giá bán *
+                                    </label>
+                                    <div class="input-group">
+                                        <input asp-for="Price" class="form-control" type="number" min="0" step="1000" />
+                                        <span class="input-group-text">đô</span>
+                                    </div>
+                                    <span asp-validation-for="Price" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="CategoryId" class="form-label fw-bold">
+                                <i class="fas fa-folder text-warning"></i> Danh mục *
+                            </label>
+                            <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories">
+                                <option value="">-- Chọn danh mục --</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label asp-for="Description" class="form-label fw-bold">
+                                <i class="fas fa-align-left text-info"></i> Mô tả
+                            </label>
+                            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-image text-secondary"></i> Hình ảnh sản phẩm
+                            </label>
+                            <input type="text" name="imageUrl" class="form-control"
+                                   placeholder="Nhập URL hình ảnh mới (để trống nếu giữ nguyên)"
+                                   id="imageUrlInput" />
+                            <div class="form-text">Để trống nếu muốn giữ nguyên hình ảnh hiện tại</div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Cập nhật sản phẩm
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-arrow-left"></i> Hủy và quay lại
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Xem trước hình ảnh -->
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="fas fa-eye"></i> Xem trước hình ảnh</h6>
+                </div>
+                <div class="card-body text-center">
+                    <div id="imagePreview">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" alt="@Model.Name"
+                                 class="img-fluid rounded shadow"
+                                 style="max-width: 100%; max-height: 200px; object-fit: cover;"
+                                 id="previewImg" />
+                        }
+                        else
+                        {
+                            <div class="bg-light d-flex align-items-center justify-content-center rounded"
+                                 style="height: 150px;" id="noImageDiv">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                        }
+                    </div>
+                    <small class="text-muted d-block mt-2">Hình ảnh hiện tại</small>
+                </div>
+            </div>
+
+            <!-- Thông tin cũ -->
+            <div class="card mt-3">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0"><i class="fas fa-history"></i> Thông tin hiện tại</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="mb-1"><strong>Tên:</strong> @Model.Name</li>
+                        <li class="mb-1"><strong>Giá:</strong> @Model.Price.ToString("C0")</li>
+                        <li class="mb-1">
+                            <strong>Danh mục:</strong>
+                            @if (Model.Category != null)
+                            {
+                                @Model.Category.Name
+                            }
+                            else
+                            {
+                                <span class="text-muted">Chưa có</span>
+                            }
+                        </li>
+                        <li class="mb-0">
+                            <strong>Mô tả:</strong>
+                            @if (!string.IsNullOrEmpty(Model.Description))
+                            {
+                                @(Model.Description.Length > 50 ? Model.Description.Substring(0, 50) + "..." : Model.Description)
+                            }
+                            else
+                            {
+                                <span class="text-muted">Chưa có</span>
+                            }
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    .input-group-text {
+        background-color: #f8f9fa;
+    }
+
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageUrlInput = document.getElementById('imageUrlInput');
+        const previewImg = document.getElementById('previewImg');
+        const originalImageUrl = '@Model.ImageUrl';
+
+        imageUrlInput.addEventListener('input', function() {
+            const newUrl = this.value.trim();
+            if (newUrl) {
+                if (previewImg) {
+                    previewImg.src = newUrl;
+                } else {
+                    // Tạo img mới nếu trước đó không có ảnh
+                    const imagePreview = document.getElementById('imagePreview');
+                    imagePreview.innerHTML = `<img src="${newUrl}" alt="Preview" class="img-fluid rounded shadow" style="max-width: 100%; max-height: 200px; object-fit: cover;" id="previewImg" />`;
+                }
+            } else {
+                // Quay về ảnh gốc nếu xóa URL
+                if (previewImg) {
+                    previewImg.src = originalImageUrl || '';
+                    if (!originalImageUrl) {
+                        const imagePreview = document.getElementById('imagePreview');
+                        imagePreview.innerHTML = `<div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 150px;"><i class="fas fa-image fa-3x text-muted"></i></div>`;
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

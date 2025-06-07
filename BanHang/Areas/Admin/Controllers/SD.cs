@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace BanHang.Areas.Admin.Controller
+namespace BanHang.Areas.Admin.Controllers
 {
     public static class SD
     {

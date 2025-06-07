@@ -1,0 +1,146 @@
+﻿@model BanHang.Models.Product
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-danger">
+                <i class="fas fa-trash-alt"></i> Xóa sản phẩm
+            </h2>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="alert alert-warning">
+                <h4 class="alert-heading">
+                    <i class="fas fa-exclamation-triangle"></i> Cảnh báo!
+                </h4>
+                <p class="mb-0">Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác!</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Thông tin sản phẩm sẽ bị xóa</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Tên sản phẩm:</dt>
+                                <dd class="col-sm-8">
+                                    <strong class="text-primary">@Html.DisplayFor(model => model.Name)</strong>
+                                </dd>
+
+                                <dt class="col-sm-4">Giá bán:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge bg-success fs-6">@Model.Price.ToString("C0")</span>
+                                </dd>
+
+                                <dt class="col-sm-4">Danh mục:</dt>
+                                <dd class="col-sm-8">
+                                    @if (Model.Category != null)
+                                    {
+                                        <span class="badge bg-primary">@Model.Category.Name</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Chưa phân loại</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-4">Mô tả:</dt>
+                                <dd class="col-sm-8">
+                                    @Html.DisplayFor(model => model.Description)
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <label class="form-label fw-bold">Hình ảnh sản phẩm:</label>
+                                <div class="mt-2">
+                                    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                                    {
+                                        <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid rounded shadow" style="max-width: 250px; max-height: 200px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-light d-flex align-items-center justify-content-center rounded" style="width: 200px; height: 150px; margin: 0 auto;">
+                                            <i class="fas fa-image fa-3x text-muted"></i>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-3">
+                <form asp-action="Delete" method="post" onsubmit="return confirmDelete()">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-danger btn-lg">
+                        <i class="fas fa-trash-alt"></i> Xác nhận xóa
+                    </button>
+                </form>
+                <a asp-action="Index" class="btn btn-secondary btn-lg">
+                    <i class="fas fa-arrow-left"></i> Hủy và quay lại
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0"><i class="fas fa-exclamation-circle"></i> Lưu ý quan trọng</h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="fas fa-times text-danger"></i>
+                            Sản phẩm sẽ bị xóa vĩnh viễn
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-times text-danger"></i>
+                            Không thể khôi phục sau khi xóa
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-times text-danger"></i>
+                            Tất cả thông tin liên quan sẽ mất
+                        </li>
+                        <li class="mb-0">
+                            <i class="fas fa-info-circle text-info"></i>
+                            Hãy cân nhắc kỹ trước khi xóa
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+    }
+</style>
+
+<script>
+    function confirmDelete() {
+        return confirm('⚠️ BẠN CÓ CHẮC CHẮN MUỐN XÓA SẢN PHẨM "@Model.Name"?\n\n❌ Hành động này không thể hoàn tác!\n\n✅ Nhấn OK để xóa\n❌ Nhấn Cancel để hủy');
+    }
+</script>
+
+@section Scripts {
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+}
