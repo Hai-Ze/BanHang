@@ -3,6 +3,7 @@ using BanHang.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using BanHang.Areas.Admin.Controllers; 
 
 
 namespace BanHang.Areas.Admin.Controllers
