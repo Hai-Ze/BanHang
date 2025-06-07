@@ -1,0 +1,493 @@
+﻿
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="welcome-header bg-gradient-primary text-white p-4 rounded-3 shadow">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-5 fw-bold mb-2">
+                            <i class="fas fa-tachometer-alt me-3"></i>
+                            Dashboard Quản Trị Viên
+                        </h1>
+                        <p class="lead mb-0">
+                            Chào mừng @User.Identity.Name - Bạn đang có quyền quản trị toàn bộ hệ thống
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="welcome-stats">
+                            <div class="stat-item">
+                                <span class="stat-time" id="currentTime"></span>
+                                <small class="d-block">@DateTime.Now.ToString("dd/MM/yyyy")</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Only Message -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-info border-0 shadow-sm">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-shield-alt fa-2x text-info me-3"></i>
+                    <div>
+                        <h5 class="alert-heading mb-1">Khu vực Quản trị</h5>
+                        <p class="mb-0">Đây là khu vực dành riêng cho Administrator. Vui lòng sử dụng cẩn thận các chức năng quản lý.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card bg-primary text-white">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="stat-number" data-target="25">0</h4>
+                            <p class="stat-label">Tổng sản phẩm</p>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-boxes fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="progress-bar" style="width: 75%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card bg-success text-white">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="stat-number" data-target="8">0</h4>
+                            <p class="stat-label">Danh mục</p>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-tags fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="progress-bar" style="width: 60%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card bg-warning text-white">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="stat-number" data-target="12">0</h4>
+                            <p class="stat-label">Người dùng</p>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="progress-bar" style="width: 45%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="stat-card bg-info text-white">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4 class="stat-number" data-target="100">0</h4>
+                            <p class="stat-label">Hiệu suất (%)</p>
+                        </div>
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        </div>
+                    </div>
+                    <div class="stat-progress">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-gradient-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>
+                        Thao tác nhanh
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="/Admin/Product/Add" class="quick-action-btn">
+                                <div class="quick-action-card bg-primary">
+                                    <i class="fas fa-plus fa-2x mb-3"></i>
+                                    <h6>Thêm sản phẩm</h6>
+                                    <p class="small">Tạo sản phẩm mới</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="/Admin/Product/Index" class="quick-action-btn">
+                                <div class="quick-action-card bg-success">
+                                    <i class="fas fa-list fa-2x mb-3"></i>
+                                    <h6>Quản lý sản phẩm</h6>
+                                    <p class="small">Xem tất cả sản phẩm</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="/Admin/Categories/Index" class="quick-action-btn">
+                                <div class="quick-action-card bg-warning">
+                                    <i class="fas fa-folder fa-2x mb-3"></i>
+                                    <h6>Quản lý danh mục</h6>
+                                    <p class="small">Phân loại sản phẩm</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <a href="/Identity/Account/Register" class="quick-action-btn">
+                                <div class="quick-action-card bg-info">
+                                    <i class="fas fa-user-plus fa-2x mb-3"></i>
+                                    <h6>Thêm người dùng</h6>
+                                    <p class="small">Tạo tài khoản mới</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activities & System Info -->
+    <div class="row">
+        <!-- Recent Activities -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-history me-2"></i>
+                        Hoạt động gần đây
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="activity-timeline">
+                        <div class="activity-item">
+                            <div class="activity-icon bg-primary">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6>Admin @User.Identity.Name đăng nhập</h6>
+                                <p class="text-muted small">Vừa xong</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-success">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6>Truy cập Dashboard Admin</h6>
+                                <p class="text-muted small">Hiện tại</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-info">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6>Hệ thống hoạt động bình thường</h6>
+                                <p class="text-muted small">Cập nhật real-time</p>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon bg-warning">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="activity-content">
+                                <h6>Bảo mật hệ thống đang hoạt động</h6>
+                                <p class="text-muted small">Liên tục</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Info -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-gradient-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2"></i>
+                        Thông tin hệ thống
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="admin-controls">
+                        <div class="control-item mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Vai trò:</span>
+                                <span class="badge bg-primary">Administrator</span>
+                            </div>
+                        </div>
+                        <div class="control-item mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Quyền hạn:</span>
+                                <span class="badge bg-success">Toàn quyền</span>
+                            </div>
+                        </div>
+                        <div class="control-item mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Bảo mật:</span>
+                                <span class="badge bg-info">Cao</span>
+                            </div>
+                        </div>
+                        <div class="control-item mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold">Uptime:</span>
+                                <span class="text-muted" id="uptime">00:00:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="mt-3">
+                        <h6 class="fw-bold mb-3">
+                            <i class="fas fa-tools me-2"></i>
+                            Chức năng Admin
+                        </h6>
+                        <div class="d-grid gap-2">
+                            <a href="/Admin/Product/Index" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-database me-2"></i>Quản lý dữ liệu
+                            </a>
+                            <a href="#" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-users-cog me-2"></i>Quản lý người dùng
+                            </a>
+                            <a href="#" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-chart-line me-2"></i>Thống kê hệ thống
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS và JavaScript giống như trước -->
+<style>
+    /* CSS code giống như trước... */
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    }
+
+    .bg-gradient-secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+    }
+
+    .bg-gradient-info {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    }
+
+    .welcome-header {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .welcome-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 100%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+        }
+
+    .welcome-stats {
+        position: relative;
+        z-index: 2;
+    }
+
+    .stat-time {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .stat-card {
+        border-radius: 15px;
+        padding: 0;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+    .stat-card-body {
+        padding: 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 0;
+        line-height: 1;
+    }
+
+    .stat-label {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
+
+    .stat-progress {
+        margin-top: 1rem;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 2px;
+        transition: width 0.6s ease;
+    }
+
+    .quick-action-btn {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .quick-action-card {
+        color: white;
+        padding: 2rem 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+        .quick-action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+    .activity-timeline .activity-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .activity-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 1rem;
+    }
+
+    .card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+        border-bottom: none;
+        font-weight: 600;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('vi-VN');
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        // Update uptime
+        function updateUptime() {
+            const start = new Date();
+            const startTime = start.getTime();
+
+            setInterval(() => {
+                const now = new Date().getTime();
+                const diff = now - startTime;
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                const uptimeElement = document.getElementById('uptime');
+                if (uptimeElement) {
+                    uptimeElement.textContent =
+                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        updateTime();
+        setInterval(updateTime, 1000);
+        updateUptime();
+
+        // Animate numbers
+        function animateNumbers() {
+            const numbers = document.querySelectorAll('.stat-number');
+            numbers.forEach(num => {
+                const finalValue = parseInt(num.getAttribute('data-target')) || 0;
+                let currentValue = 0;
+                const increment = finalValue / 50;
+
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        currentValue = finalValue;
+                        clearInterval(timer);
+                    }
+                    num.textContent = Math.floor(currentValue);
+                }, 20);
+            });
+        }
+
+        setTimeout(animateNumbers, 200);
+    });
+</script>
