@@ -1,82 +1,284 @@
 ﻿@page
 @model LoginModel
-
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Đăng nhập";
 }
 
-<h1>@ViewData["Title"]</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email" class="form-label">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+<div class="container-fluid">
+    <div class="row min-vh-100">
+        <!-- Left Side - Branding -->
+        <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center bg-primary">
+            <div class="text-center text-white p-5">
+                <i class="fas fa-shopping-cart fa-5x mb-4"></i>
+                <h1 class="display-4 fw-bold mb-3">BanHang</h1>
+                <p class="lead mb-4">Chào mừng trở lại!</p>
+                <div class="features-list text-start">
+                    <div class="feature-item mb-3">
+                        <i class="fas fa-shield-alt me-3"></i>
+                        <span>Đăng nhập an toàn</span>
+                    </div>
+                    <div class="feature-item mb-3">
+                        <i class="fas fa-bolt me-3"></i>
+                        <span>Truy cập nhanh chóng</span>
+                    </div>
+                    <div class="feature-item mb-3">
+                        <i class="fas fa-mobile-alt me-3"></i>
+                        <span>Tương thích mọi thiết bị</span>
+                    </div>
+                    <div class="feature-item">
+                        <i class="fas fa-clock me-3"></i>
+                        <span>Hoạt động 24/7</span>
+                    </div>
                 </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password" class="form-label">Password</label>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Right Side - Login Form -->
+        <div class="col-lg-6 d-flex align-items-center justify-content-center">
+            <div class="auth-form-container w-100" style="max-width: 400px;">
+                <div class="text-center mb-5">
+                    <div class="auth-logo mb-4">
+                        <i class="fas fa-sign-in-alt fa-3x text-primary"></i>
+                    </div>
+                    <h2 class="fw-bold text-dark">Đăng nhập</h2>
+                    <p class="text-muted">Nhập thông tin để truy cập tài khoản</p>
                 </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                    </label>
-                </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </form>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
+
+                <form id="account" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <!-- Email -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Email" class="form-control form-control-lg"
+                               id="email" placeholder="name@example.com" autocomplete="username" aria-required="true" />
+                        <label for="email" class="form-label">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </label>
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Password" class="form-control form-control-lg"
+                               id="password" type="password" placeholder="Mật khẩu" autocomplete="current-password" aria-required="true" />
+                        <label for="password" class="form-label">
+                            <i class="fas fa-lock me-2"></i>Mật khẩu
+                        </label>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" asp-for="Input.RememberMe" type="checkbox" id="rememberMe" />
+                        <label class="form-check-label" for="rememberMe">
+                            Ghi nhớ đăng nhập
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button id="login-submit" type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Đăng nhập
+                    </button>
+
+                    <!-- Links -->
+                    <div class="text-center">
+                        <div class="mb-2">
+                            <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none">
+                                Quên mật khẩu?
+                            </a>
+                        </div>
+                        <p class="text-muted">
+                            Chưa có tài khoản?
+                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none fw-bold">
+                                Đăng ký ngay
+                            </a>
                         </p>
                     </div>
-                }
-                else
+                </form>
+
+                <!-- External Logins -->
+                @if ((Model.ExternalLogins?.Count ?? 0) > 0)
                 {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
+                    <div class="text-center mt-4">
+                        <div class="divider mb-3">
+                            <span class="divider-text">Hoặc đăng nhập với</span>
+                        </div>
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                            <div class="d-grid gap-2">
                                 @foreach (var provider in Model.ExternalLogins!)
                                 {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    <button type="submit" class="btn btn-outline-secondary" name="provider" value="@provider.Name" title="Đăng nhập bằng @provider.DisplayName">
+                                        <i class="fab fa-@provider.Name.ToLower() me-2"></i>
+                                        @provider.DisplayName
+                                    </button>
                                 }
-                            </p>
-                        </div>
-                    </form>
+                            </div>
+                        </form>
+                    </div>
                 }
-            }
-        </section>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Same CSS as Register -->
+<style>
+    .min-vh-100 {
+        min-height: 100vh;
+    }
+
+    .bg-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
+    .auth-form-container {
+        padding: 2rem;
+        animation: slideUp 0.6s ease-out;
+    }
+
+    .auth-logo {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin: 0 auto;
+    }
+
+    .form-control, .form-select {
+        border-radius: 12px;
+        border: 2px solid #e9ecef;
+        padding: 1rem 1rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+            transform: translateY(-2px);
+        }
+
+    .form-floating > label {
+        padding: 1rem 1rem;
+        font-weight: 500;
+        color: #6c757d;
+    }
+
+    .btn {
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+    .btn-outline-secondary {
+        border: 2px solid #e9ecef;
+        color: #6c757d;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+            transform: translateY(-1px);
+        }
+
+    .feature-item {
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .divider {
+        position: relative;
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #dee2e6;
+        }
+
+    .divider-text {
+        background: white;
+        padding: 0 1rem;
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .alert {
+        border-radius: 12px;
+        border: none;
+    }
+
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+
+    /* Animation - SỬA LẠI */
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile Responsive - SỬA LẠI */
+    @@media (max-width: 991.98px) {
+        .auth-form-container {
+            padding: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .bg-primary {
+            display: none !important;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('account');
+        const submitBtn = document.getElementById('login-submit');
+
+        form.addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang đăng nhập...';
+            submitBtn.disabled = true;
+        });
+    });
+</script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -150,7 +150,7 @@
                 <div class="card-body p-4">
                     <div class="row">
                         <div class="col-md-4 mb-3 mb-md-0">
-                            <a asp-action="Update" asp-route-id="@Model.Id" class="btn btn-warning btn-lg w-100">
+                            <a href="@Url.Action("Update", "Product", new { area = "Admin", id = Model.Id })" class="btn btn-warning btn-lg w-100">
                                 <i class="fas fa-edit me-2"></i>
                                 <div class="d-block">
                                     <strong>Chỉnh sửa</strong>
@@ -169,7 +169,7 @@
                             </button>
                         </div>
                         <div class="col-md-4">
-                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg w-100">
+                            <a href="@Url.Action("Index", "Product", new { area = "Admin" })" class="btn btn-outline-secondary btn-lg w-100">
                                 <i class="fas fa-list me-2"></i>
                                 <div class="d-block">
                                     <strong>Danh sách</strong>
