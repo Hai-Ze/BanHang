@@ -2,52 +2,59 @@
 
 @{
     ViewData["Title"] = "Thêm danh mục mới";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container">
+<div class="container-fluid">
     <div class="row mb-4">
-        <div class="col-12">
+        <div class="col-md-12">
             <h2 class="text-primary">
-                <i class="fas fa-plus"></i> Thêm danh mục mới
+                <i class="fas fa-plus-circle"></i> Thêm danh mục mới
             </h2>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a asp-area="Admin" asp-controller="Categories" asp-action="Index">Quản lý danh mục</a>
+                        <a asp-area="Admin" asp-controller="Categories" asp-action="Index" class="breadcrumb-link">
+                            <i class="fas fa-folder"></i> Danh mục
+                        </a>
                     </li>
                     <li class="breadcrumb-item active">Thêm mới</li>
                 </ol>
             </nav>
-            <hr>
         </div>
     </div>
 
-    <div class="row justify-content-center">
+    <div class="row">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-folder"></i> Thông tin danh mục</h5>
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-edit"></i> Thông tin danh mục</h5>
                 </div>
                 <div class="card-body">
+                    <!-- SỬA FORM - DÙNG ASP.NET TAG HELPERS -->
                     <form asp-area="Admin" asp-controller="Categories" asp-action="Add" method="post">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                        <div class="form-group mb-3">
+                        <div class="mb-4">
                             <label asp-for="Name" class="form-label fw-bold">
-                                <i class="fas fa-tag text-primary"></i> Tên danh mục *
+                                <i class="fas fa-tag text-primary"></i> Tên danh mục <span class="text-danger">*</span>
                             </label>
-                            <input asp-for="Name" class="form-control" placeholder="Nhập tên danh mục..."
-                                   maxlength="50" required />
-                            <div class="form-text">Tối đa 50 ký tự</div>
+                            <input asp-for="Name" class="form-control form-control-lg"
+                                   placeholder="Nhập tên danh mục..."
+                                   required
+                                   autocomplete="off" />
                             <span asp-validation-for="Name" class="text-danger"></span>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle"></i> Tên danh mục phải từ 2-100 ký tự
+                            </div>
                         </div>
 
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-success btn-lg">
-                                <i class="fas fa-save"></i> Thêm danh mục
+                        <div class="d-flex gap-3 pt-3">
+                            <button type="submit" class="btn btn-success btn-lg action-btn">
+                                <i class="fas fa-save me-2"></i> Lưu danh mục
                             </button>
-                            <a asp-area="Admin" asp-controller="Categories" asp-action="Index" class="btn btn-secondary btn-lg">
-                                <i class="fas fa-arrow-left"></i> Quay lại
+                            <a asp-area="Admin" asp-controller="Categories" asp-action="Index" class="btn btn-secondary btn-lg action-btn">
+                                <i class="fas fa-arrow-left me-2"></i> Quay lại
                             </a>
                         </div>
                     </form>
@@ -56,29 +63,42 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card border-info">
+            <div class="card shadow-sm">
                 <div class="card-header bg-info text-white">
-                    <h6 class="mb-0"><i class="fas fa-lightbulb"></i> Gợi ý</h6>
+                    <h5 class="mb-0"><i class="fas fa-lightbulb"></i> Hướng dẫn</h5>
                 </div>
                 <div class="card-body">
-                    <ul class="list-unstyled mb-0 small">
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success"></i>
-                            Tên danh mục nên ngắn gọn, dễ hiểu
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success"></i>
-                            Tránh trùng lặp với danh mục đã có
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success"></i>
-                            Sử dụng từ khóa dễ tìm kiếm
-                        </li>
-                        <li class="mb-0">
-                            <i class="fas fa-check text-success"></i>
-                            Viết hoa chữ cái đầu
-                        </li>
-                    </ul>
+                    <div class="guide-list">
+                        <div class="guide-item mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Tên danh mục là bắt buộc</strong>
+                            <small class="d-block text-muted mt-1">Không được để trống</small>
+                        </div>
+                        <div class="guide-item mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Tên ngắn gọn và rõ ràng</strong>
+                            <small class="d-block text-muted mt-1">Dễ hiểu cho khách hàng</small>
+                        </div>
+                        <div class="guide-item mb-3">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            <strong>Không trùng lặp</strong>
+                            <small class="d-block text-muted mt-1">Mỗi danh mục phải unique</small>
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="tips-section">
+                        <h6 class="text-primary">
+                            <i class="fas fa-star"></i> Gợi ý:
+                        </h6>
+                        <ul class="list-unstyled small text-muted">
+                            <li>• Điện tử</li>
+                            <li>• Thời trang</li>
+                            <li>• Gia dụng</li>
+                            <li>• Sách & Văn phòng phẩm</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -88,23 +108,233 @@
 <style>
     .card {
         border: none;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border-radius: 12px;
     }
 
-    .form-control:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
     }
 
-    .btn-lg {
-        padding: 0.75rem 1.5rem;
-        font-size: 1.1rem;
+    .card-header {
+        border-radius: 12px 12px 0 0 !important;
+        border-bottom: none;
+    }
+
+    .form-control-lg {
+        border-radius: 8px;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+        .form-control-lg:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+            transform: translateY(-1px);
+        }
+
+    .action-btn {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        font-weight: 600;
+        padding: 12px 24px;
+    }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .action-btn:active {
+            transform: translateY(0);
+        }
+
+    .btn-success.action-btn {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+    }
+
+        .btn-success.action-btn:hover {
+            background: linear-gradient(45deg, #218838, #1e7e34);
+        }
+
+    .btn-secondary.action-btn {
+        background: linear-gradient(45deg, #6c757d, #5a6268);
+        border: none;
+    }
+
+        .btn-secondary.action-btn:hover {
+            background: linear-gradient(45deg, #5a6268, #495057);
+        }
+
+    .breadcrumb-link {
+        color: #6c757d;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+        .breadcrumb-link:hover {
+            color: #28a745;
+        }
+
+    .guide-item {
+        padding: 8px 12px;
+        background: #f8f9fa;
+        border-radius: 6px;
+        border-left: 3px solid #28a745;
+    }
+
+    .tips-section {
+        background: #e3f2fd;
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 3px solid #2196f3;
+    }
+
+    .form-text {
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    /* Animation cho form */
+    .card {
+        animation: slideInUp 0.5s ease-out;
+    }
+
+    /* Keyframes animation */
+    @@keyframes slideInUp {
+        from {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .col-md-8, .col-md-4 {
+            margin-bottom: 1rem;
+        }
+
+        .action-btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .d-flex.gap-3 {
+            flex-direction: column;
+            gap: 0.5rem !important;
+        }
     }
 </style>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🔥 Add Category page loaded');
+
+        const form = document.querySelector('form');
+        const nameInput = document.querySelector('input[name="Name"]');
+        const submitBtn = document.querySelector('button[type="submit"]');
+
+        // Test elements
+        if (form) {
+            console.log('✅ Form found:', form.action);
+        } else {
+            console.log('❌ Form NOT found');
+        }
+
+        if (nameInput) {
+            console.log('✅ Name input found');
+
+            // Focus vào input khi trang load
+            nameInput.focus();
+
+            // Validate real-time
+            nameInput.addEventListener('input', function() {
+                const value = this.value.trim();
+                if (value.length >= 2) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                }
+            });
+        }
+
+        // Test submit button
+        if (submitBtn) {
+            console.log('✅ Submit button found');
+
+            submitBtn.addEventListener('click', function(e) {
+                console.log('🔥 Submit button clicked!');
+
+                // Validate trước khi submit
+                if (nameInput && nameInput.value.trim().length < 2) {
+                    e.preventDefault();
+                    alert('Tên danh mục phải có ít nhất 2 ký tự!');
+                    nameInput.focus();
+                    return false;
+                }
+            });
+        }
+
+        // Test form submit
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                console.log('🚀 Form submitting...');
+                console.log('Form action:', this.action);
+                console.log('Form method:', this.method);
+
+                const formData = new FormData(this);
+                console.log('Form data:');
+                for (let [key, value] of formData.entries()) {
+                    console.log(`${key}: "${value}"`);
+                }
+
+                // KIỂM TRA DỮ LIỆU TRƯỚC KHI SUBMIT
+                const nameValue = formData.get('Name');
+                console.log('📝 Name value:', nameValue);
+                console.log('📝 Name length:', nameValue ? nameValue.length : 0);
+
+                if (!nameValue || nameValue.trim().length < 1) {
+                    e.preventDefault();
+                    alert('❌ Tên danh mục không được để trống!');
+                    return false;
+                }
+
+                console.log('✅ Dữ liệu hợp lệ, đang submit...');
+
+                // DEBUG: In ra toàn bộ form HTML
+                console.log('🔍 Form HTML:', this.outerHTML);
+
+                // Kiểm tra antiforgery token
+                const token = this.querySelector('input[name="__RequestVerificationToken"]');
+                console.log('🔐 Antiforgery token:', token ? 'Có' : 'Không có');
+                if (token) {
+                    console.log('🔐 Token value:', token.value.substring(0, 20) + '...');
+                }
+            });
+        }
+    });
+
+    // Function test submit trực tiếp
+    function testSubmit() {
+        const form = document.querySelector('form');
+        if (form) {
+            console.log('🧪 Testing direct submit...');
+            form.submit();
+        }
+    }
+</script>
+
 @section Scripts {
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
