@@ -1,6 +1,6 @@
 ﻿using BanHang.Models;
 using BanHang.Repositories;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.EntityFrameworkCore;
 
 public class EFCategoryRepository : ICategoryRepository
 {
@@ -11,37 +11,42 @@ public class EFCategoryRepository : ICategoryRepository
         _context = context;
     }
 
-    // Lấy tất cả danh mục
+    // ✅ Cập nhật để include Products
     public async Task<IEnumerable<Category>> GetAllAsync()
     {
-        return await _context.Categories.ToListAsync();
+        return await _context.Categories
+            .Include(c => c.Products)  // ← Thêm dòng này
+            .ToListAsync();
     }
 
-    // Lấy danh mục theo ID
+    // ✅ Cập nhật để include Products
     public async Task<Category> GetByIdAsync(int id)
     {
-        return await _context.Categories.FindAsync(id);
+        return await _context.Categories
+            .Include(c => c.Products)  // ← Thêm dòng này
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
 
-    // Thêm danh mục mới
+    // Các method khác giữ nguyên
     public async Task AddAsync(Category category)
     {
         _context.Categories.Add(category);
         await _context.SaveChangesAsync();
     }
 
-    // Cập nhật danh mục
     public async Task UpdateAsync(Category category)
     {
         _context.Categories.Update(category);
         await _context.SaveChangesAsync();
     }
 
-    // Xóa danh mục theo ID
     public async Task DeleteAsync(int id)
     {
         var category = await _context.Categories.FindAsync(id);
-        _context.Categories.Remove(category);
-        await _context.SaveChangesAsync();
+        if (category != null)
+        {
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+        }
     }
 }

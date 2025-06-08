@@ -1,0 +1,317 @@
+﻿@model IEnumerable<BanHang.Models.Category>
+
+@{
+    ViewData["Title"] = "Quản lý danh mục";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Anti-forgery token để bảo mật -->
+    @Html.AntiForgeryToken()
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="text-primary">
+                <i class="fas fa-folder"></i> Quản lý danh mục
+            </h2>
+            <p class="text-muted">Danh sách tất cả danh mục sản phẩm trong hệ thống</p>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-area="Admin" asp-controller="Categories" asp-action="Add" class="btn btn-success btn-lg">
+                <i class="fas fa-plus"></i> Thêm danh mục mới
+            </a>
+        </div>
+    </div>
+
+    <!-- Thống kê nhanh -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5>Tổng danh mục</h5>
+                            <h3>@Model.Count()</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-folder fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5>Có sản phẩm</h5>
+                            <h3>@Model.Count(c => c.Products != null && c.Products.Any())</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5>Tổng sản phẩm</h5>
+                            <h3>@Model.SelectMany(c => c.Products ?? new List<BanHang.Models.Product>()).Count()</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bộ lọc và tìm kiếm -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5><i class="fas fa-search"></i> Tìm kiếm danh mục</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo tên danh mục...">
+                </div>
+                <div class="col-md-3">
+                    <select id="statusFilter" class="form-select">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="has-products">Có sản phẩm</option>
+                        <option value="no-products">Chưa có sản phẩm</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                        <i class="fas fa-times"></i> Xóa bộ lọc
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bảng danh sách danh mục -->
+    <div class="card">
+        <div class="card-header">
+            <h5><i class="fas fa-list"></i> Danh sách danh mục</h5>
+        </div>
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">Chưa có danh mục nào</h4>
+                    <p class="text-muted">Hãy thêm danh mục đầu tiên của bạn!</p>
+                    <a asp-area="Admin" asp-controller="Categories" asp-action="Add" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Thêm danh mục
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover" id="categoriesTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>
+                                    <i class="fas fa-hashtag"></i> ID
+                                </th>
+                                <th>
+                                    <i class="fas fa-tag"></i>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </th>
+                                <th>
+                                    <i class="fas fa-box"></i> Số sản phẩm
+                                </th>
+                                <th>
+                                    <i class="fas fa-info-circle"></i> Trạng thái
+                                </th>
+                                <th width="220">
+                                    <i class="fas fa-cogs"></i> Thao tác
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr data-category-name="@item.Name.ToLower()"
+                                    data-has-products="@((item.Products != null && item.Products.Any()).ToString().ToLower())">
+                                    <td>
+                                        <code>@item.Id</code>
+                                    </td>
+                                    <td>
+                                        <strong>@Html.DisplayFor(modelItem => item.Name)</strong>
+                                    </td>
+                                    <td>
+                                        @if (item.Products != null && item.Products.Any())
+                                        {
+                                            <span class="badge bg-success">@item.Products.Count sản phẩm</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">0 sản phẩm</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Products != null && item.Products.Any())
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> Có sản phẩm
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="fas fa-exclamation"></i> Trống
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <!-- Nút xem chi tiết -->
+                                            <a asp-area="Admin" asp-controller="Categories" asp-action="Display" asp-route-id="@item.Id"
+                                               class="btn btn-info btn-sm" title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+
+                                            <!-- Nút chỉnh sửa -->
+                                            <a asp-area="Admin" asp-controller="Categories" asp-action="Update" asp-route-id="@item.Id"
+                                               class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+                                            <!-- Nút xóa -->
+                                            <a asp-area="Admin" asp-controller="Categories" asp-action="Delete" asp-route-id="@item.Id"
+                                               class="btn btn-danger btn-sm" title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        border: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    .table th {
+        border-top: none;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .btn-group .btn {
+        margin-right: 2px;
+    }
+
+    .badge {
+        font-size: 0.75em;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+        transition: all 0.2s ease;
+    }
+
+    .btn-group .btn:hover {
+        z-index: 1;
+    }
+</style>
+
+<script>
+    // Chức năng tìm kiếm và lọc
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const table = document.getElementById('categoriesTable');
+
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedStatus = statusFilter.value;
+
+            if (!table || !table.getElementsByTagName('tbody')[0]) return;
+
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const categoryName = row.getAttribute('data-category-name') || '';
+                const hasProducts = row.getAttribute('data-has-products') === 'true';
+
+                let showRow = true;
+
+                // Lọc theo tên
+                if (searchTerm && !categoryName.includes(searchTerm)) {
+                    showRow = false;
+                }
+
+                // Lọc theo trạng thái
+                if (selectedStatus === 'has-products' && !hasProducts) {
+                    showRow = false;
+                }
+                if (selectedStatus === 'no-products' && hasProducts) {
+                    showRow = false;
+                }
+
+                row.style.display = showRow ? '' : 'none';
+            }
+        }
+
+        if (searchInput) searchInput.addEventListener('input', filterTable);
+        if (statusFilter) statusFilter.addEventListener('change', filterTable);
+    });
+
+    function clearFilters() {
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const table = document.getElementById('categoriesTable');
+
+        if (searchInput) searchInput.value = '';
+        if (statusFilter) statusFilter.selectedIndex = 0;
+
+        if (table && table.getElementsByTagName('tbody')[0]) {
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            for (let i = 0; i < rows.length; i++) {
+                rows[i].style.display = '';
+            }
+        }
+    }
+
+    // Hiệu ứng loading cho các nút
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.btn');
+        if (btn && btn.getAttribute('href')) {
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            // Restore sau 2 giây nếu không redirect
+            setTimeout(() => {
+                if (btn.innerHTML.includes('spinner')) {
+                    btn.innerHTML = originalContent;
+                }
+            }, 2000);
+        }
+    });
+</script>
+
+<!-- CDN cho Bootstrap và FontAwesome -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

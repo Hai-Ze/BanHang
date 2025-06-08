@@ -1,10 +1,14 @@
 ﻿using BanHang.Models;
 using BanHang.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace BanHang.Areas.Admin.Controllers
 {
+
+    [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class CategoriesController : Controller
     {
         private readonly IProductRepository _productRepository;
