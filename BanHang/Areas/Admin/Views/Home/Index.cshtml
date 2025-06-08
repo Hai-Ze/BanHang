@@ -1,4 +1,5 @@
-﻿
+﻿@model List<BanHang.Models.Product>
+
 @{
     ViewData["Title"] = "Admin Dashboard";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -22,7 +23,7 @@
                     <div class="col-md-4 text-end">
                         <div class="welcome-stats">
                             <div class="stat-item">
-                                <span class="stat-time" id="currentTime"></span>
+                                <span class="stat-time" id="currentTime">@DateTime.Now.ToString("HH:mm")</span>
                                 <small class="d-block">@DateTime.Now.ToString("dd/MM/yyyy")</small>
                             </div>
                         </div>
@@ -49,12 +50,12 @@
 
     <!-- Admin Quick Stats -->
     <div class="row mb-4">
-        <div class="col-lg-3 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6 mb-4">
             <div class="stat-card bg-primary text-white">
                 <div class="stat-card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h4 class="stat-number" data-target="25">0</h4>
+                            <h4 class="stat-number" data-target="@Model.Count">0</h4>
                             <p class="stat-label">Tổng sản phẩm</p>
                         </div>
                         <div class="stat-icon">
@@ -68,12 +69,12 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6 mb-4">
             <div class="stat-card bg-success text-white">
                 <div class="stat-card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h4 class="stat-number" data-target="8">0</h4>
+                            <h4 class="stat-number" data-target="@ViewBag.CategoryCount">0</h4>
                             <p class="stat-label">Danh mục</p>
                         </div>
                         <div class="stat-icon">
@@ -87,12 +88,12 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-md-6 mb-4">
+        <div class="col-lg-4 col-md-6 mb-4">
             <div class="stat-card bg-warning text-white">
                 <div class="stat-card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <h4 class="stat-number" data-target="12">0</h4>
+                            <h4 class="stat-number" data-target="@ViewBag.UserCount">0</h4>
                             <p class="stat-label">Người dùng</p>
                         </div>
                         <div class="stat-icon">
@@ -101,25 +102,6 @@
                     </div>
                     <div class="stat-progress">
                         <div class="progress-bar" style="width: 45%"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="stat-card bg-info text-white">
-                <div class="stat-card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h4 class="stat-number" data-target="100">0</h4>
-                            <p class="stat-label">Hiệu suất (%)</p>
-                        </div>
-                        <div class="stat-icon">
-                            <i class="fas fa-chart-line fa-2x"></i>
-                        </div>
-                    </div>
-                    <div class="stat-progress">
-                        <div class="progress-bar" style="width: 100%"></div>
                     </div>
                 </div>
             </div>
@@ -180,62 +162,9 @@
         </div>
     </div>
 
-    <!-- Recent Activities & System Info -->
+    <!-- System Info -->
     <div class="row">
-        <!-- Recent Activities -->
-        <div class="col-lg-8 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-gradient-primary text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-history me-2"></i>
-                        Hoạt động gần đây
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="activity-timeline">
-                        <div class="activity-item">
-                            <div class="activity-icon bg-primary">
-                                <i class="fas fa-crown"></i>
-                            </div>
-                            <div class="activity-content">
-                                <h6>Admin @User.Identity.Name đăng nhập</h6>
-                                <p class="text-muted small">Vừa xong</p>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon bg-success">
-                                <i class="fas fa-tachometer-alt"></i>
-                            </div>
-                            <div class="activity-content">
-                                <h6>Truy cập Dashboard Admin</h6>
-                                <p class="text-muted small">Hiện tại</p>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon bg-info">
-                                <i class="fas fa-database"></i>
-                            </div>
-                            <div class="activity-content">
-                                <h6>Hệ thống hoạt động bình thường</h6>
-                                <p class="text-muted small">Cập nhật real-time</p>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon bg-warning">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="activity-content">
-                                <h6>Bảo mật hệ thống đang hoạt động</h6>
-                                <p class="text-muted small">Liên tục</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- System Info -->
-        <div class="col-lg-4 mb-4">
+        <div class="col-lg-12 mb-4">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-gradient-info text-white">
                     <h5 class="mb-0">
@@ -296,9 +225,8 @@
     </div>
 </div>
 
-<!-- CSS và JavaScript giống như trước -->
 <style>
-    /* CSS code giống như trước... */
+    /* CSS giữ nguyên như trước */
     .bg-gradient-primary {
         background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
     }
