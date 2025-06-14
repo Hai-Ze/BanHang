@@ -6,42 +6,265 @@
     <title>@ViewData["Title"] - BanHang</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
-          rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BanHang.styles.css" asp-append-version="true" />
-    <!-- Thêm FontAwesome cho icon -->
+    <!-- FontAwesome cho icon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        /* ✅ MODERN NAVBAR STYLES */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+
+            .navbar-brand:hover {
+                transform: scale(1.05);
+                color: #f8f9fa !important;
+            }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            font-weight: 500;
+            padding: 0.75rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+            .nav-link:hover {
+                color: white !important;
+                background: rgba(255,255,255,0.1);
+                transform: translateY(-2px);
+            }
+
+            .nav-link:before {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                width: 0;
+                height: 2px;
+                background: white;
+                transition: all 0.3s ease;
+                transform: translateX(-50%);
+            }
+
+            .nav-link:hover:before {
+                width: 80%;
+            }
+
+        /* ✅ SHOPPING CART BUTTON STYLES */
+        .cart-btn {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white !important;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .cart-btn:hover {
+                background: white;
+                color: #667eea !important;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            }
+
+            .cart-btn::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                background: rgba(255,255,255,0.3);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                transition: all 0.3s ease;
+            }
+
+            .cart-btn:active::before {
+                width: 300px;
+                height: 300px;
+            }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        keyframes pulse {
+            0%
+
+        {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+
+        }
+
+        /* ✅ DROPDOWN STYLES */
+        .dropdown-menu {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            padding: 0.5rem 0;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 0.5rem;
+        }
+
+            .dropdown-item:hover {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                transform: translateX(5px);
+            }
+
+        .dropdown-divider {
+            margin: 0.5rem 1rem;
+            border-color: #e9ecef;
+        }
+
+        /* ✅ BADGE STYLES */
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .bg-danger {
+            background: linear-gradient(135deg, #ff4757, #ff3742) !important;
+        }
+
+        .bg-warning {
+            background: linear-gradient(135deg, #ffa726, #ff9800) !important;
+        }
+
+        /* ✅ RESPONSIVE */
+        media (max-width: 991.98px) {
+            .navbar-nav
+
+        {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .cart-btn {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        }
+
+        /* ✅ FOOTER STYLES */
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+            .footer a {
+                color: #ecf0f1;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+                .footer a:hover {
+                    color: #3498db;
+                }
+
+        /* ✅ MAIN CONTENT */
+        main {
+            min-height: calc(100vh - 200px);
+        }
+
+        /* ✅ LOADING ANIMATION */
+        .cart-loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+            .cart-loading .cart-btn {
+                background: rgba(255,255,255,0.3);
+            }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
             <div class="container-fluid">
+                <!-- ✅ BRAND -->
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <i class="fas fa-shopping-cart me-2"></i>BanHang
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <!-- ✅ MOBILE TOGGLE -->
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <!-- ✅ MAIN NAVIGATION -->
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
                                 <i class="fas fa-home me-1"></i>Trang chủ
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">
                                 <i class="fas fa-shield-alt me-1"></i>Chính sách
                             </a>
                         </li>
 
-                        <!-- ✅ MENU ADMIN CHO ADMIN VÀ EMPLOYEE -->
+                        <!-- ✅ ADMIN MENU (CHỈ CHO ADMIN VÀ EMPLOYEE) -->
                         @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.IsInRole("Employee")))
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-primary fw-bold" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-cogs me-1"></i>Quản trị
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="adminDropdown">
@@ -61,7 +284,6 @@
                                             <i class="fas fa-folder me-2"></i>Quản lý danh mục
                                         </a>
                                     </li>
-                                    <!-- ✅ THÊM MENU ĐỚN HÀNG -->
                                     <li>
                                         <a class="dropdown-item" asp-area="Admin" asp-controller="Order" asp-action="Index">
                                             <i class="fas fa-shopping-bag me-2"></i>Quản lý đơn hàng
@@ -86,31 +308,149 @@
                             </li>
                         }
                     </ul>
-                    <partial name="_LoginPartial" />
-                    <from class="d-flex">
-                        <button class="btn btn-outline-dark" type="submit">
-                            <i class="bi-cart-fill me-1"><</i>
-                            Cart
+
+                    <!-- ✅ USER MENU & CART -->
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- ✅ USER LOGIN/LOGOUT PARTIAL -->
+                        <partial name="_LoginPartial" />
+
+                        <!-- ✅ SHOPPING CART BUTTON (SỬA LẠI HOÀN TOÀN) -->
+                        <button class="cart-btn position-relative" type="button" onclick="goToCart()">
+                            <i class="fas fa-shopping-cart me-1"></i>
+                            <span class="d-none d-md-inline">Giỏ hàng</span>
+                            <span class="cart-count" id="cartCount">0</span>
                         </button>
-                    </from>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+
+    <!-- ✅ MAIN CONTENT WITH PADDING FOR FIXED NAVBAR -->
+    <div class="container-fluid" style="padding-top: 100px;">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    <!-- ✅ FOOTER ĐỠN GIẢN -->
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - BanHang - <a asp-area="" asp-controller="Home" asp-action="Privacy">Chính sách bảo mật</a>
+            <div class="text-center py-3">
+                &copy; 2025 - BanHang
+            </div>
         </div>
     </footer>
+
+    <!-- ✅ SCRIPTS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- ✅ CART FUNCTIONALITY SCRIPT -->
+    <script>
+        // ✅ CART FUNCTIONS
+        function goToCart() {
+            console.log('🛒 Chuyển đến giỏ hàng...');
+
+            // Hiển thị loading
+            document.body.classList.add('cart-loading');
+
+            // Redirect sau 300ms để có hiệu ứng
+            setTimeout(() => {
+                window.location.href = '@Url.Action("Index", "ShoppingCart")';
+            }, 300);
+        }
+
+        // ✅ LOAD CART COUNT KHI TRANG TẢI
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+
+            // Cập nhật cart count mỗi 30 giây
+            setInterval(updateCartCount, 30000);
+        });
+
+        // ✅ CẬP NHẬT SỐ LƯỢNG GIỎ HÀNG
+        function updateCartCount() {
+            fetch('@Url.Action("GetCartInfo", "ShoppingCart")')
+                .then(response => response.json())
+                .then(data => {
+                    const cartCount = document.getElementById('cartCount');
+                    if (cartCount) {
+                        cartCount.textContent = data.totalQuantity || 0;
+
+                        // Ẩn badge nếu giỏ hàng trống
+                        if (data.totalQuantity === 0) {
+                            cartCount.style.display = 'none';
+                        } else {
+                            cartCount.style.display = 'flex';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating cart count:', error);
+                });
+        }
+
+        // ✅ ANIMATION CHO NAVBAR KHI SCROLL
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const navbar = document.querySelector('.navbar');
+
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up
+                navbar.style.transform = 'translateY(0)';
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // ✅ SMOOTH SCROLL CHO CÁC LINK NỘI BỘ
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ✅ TOAST NOTIFICATION FUNCTION
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                    ${message}
+                    <button type="button" class="btn-close ms-auto" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+
+            // Tự động xóa sau 5 giây
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 5000);
+        }
+
+        // ✅ GLOBAL CART UPDATE FUNCTION (CÓ THỂ GỌI TỪ CÁC TRANG KHÁC)
+        window.updateCartUI = function() {
+            updateCartCount();
+            showToast('Giỏ hàng đã được cập nhật!', 'success');
+        };
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
