@@ -15,17 +15,20 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using BanHang.Areas.Admin.Controllers; // Thêm để sử dụng SD
 
 namespace BanHang.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -116,6 +119,30 @@ namespace BanHang.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // ✅ THÊM LOGIC KIỂM TRA ROLE VÀ REDIRECT
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user != null)
+                    {
+                        var roles = await _userManager.GetRolesAsync(user);
+
+                        // Nếu user là Admin, redirect đến Admin Dashboard
+                        if (roles.Contains(SD.Role_Admin))
+                        {
+                            return LocalRedirect("/Admin/Home/Index");
+                        }
+                        // Nếu user là Employee, cũng redirect đến Admin area
+                        else if (roles.Contains(SD.Role_Employee))
+                        {
+                            return LocalRedirect("/Admin/Home/Index");
+                        }
+                        // Các role khác redirect về trang chủ thông thường
+                        else
+                        {
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<BanHang.Models.Order>
+
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h2 class="text-primary">
+                <i class="fas fa-shopping-bag"></i> Quản lý đơn hàng
+            </h2>
+            <p class="text-muted">Theo dõi và quản lý tất cả đơn hàng trong hệ thống</p>
+        </div>
+        <div class="col-md-6 text-end">
+            @if (User.IsInRole("Admin"))
+            {
+                <a href="@Url.Action("Create", "Order")" class="btn btn-success btn-lg">
+                    <i class="fas fa-plus"></i> Tạo đơn hàng mới
+                </a>
+            }
+            <a href="@Url.Action("Statistics", "Order")" class="btn btn-info btn-lg">
+                <i class="fas fa-chart-bar"></i> Thống kê
+            </a>
+        </div>
+    </div>
+
+    <!-- Thống kê nhanh -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5>Tổng đơn hàng</h5>
+                            <h3>@Model.Count()</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-shopping-bag fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5>Chờ xử lý</h5>
+                            <h3>@Model.Count(o => o.Status == BanHang.Models.OrderStatus.Pending || o.Status == BanHang.Models.OrderStatus.Confirmed)</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-clock fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5>Đang giao</h5>
+                            <h3>@Model.Count(o => o.Status == BanHang.Models.OrderStatus.Processing || o.Status == BanHang.Models.OrderStatus.Shipping)</h3>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-truck fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">

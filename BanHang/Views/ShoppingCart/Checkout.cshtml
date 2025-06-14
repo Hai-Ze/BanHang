@@ -1,0 +1,264 @@
+﻿@model BanHang.Models.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Đặt hàng";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="text-primary">
+                <i class="fas fa-credit-card"></i> Đặt hàng
+            </h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index", "ShoppingCart")">Giỏ hàng</a></li>
+                    <li class="breadcrumb-item active">Đặt hàng</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <form asp-action="Checkout" method="post" id="checkoutForm">
+        <div class="row">
+            <!-- Thông tin đặt hàng -->
+            <div class="col-lg-8">
+                <!-- Thông tin khách hàng -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>Thông tin khách hàng
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CustomerName" class="form-label fw-bold"></label>
+                                <input asp-for="CustomerName" class="form-control form-control-lg" />
+                                <span asp-validation-for="CustomerName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CustomerEmail" class="form-label fw-bold"></label>
+                                <input asp-for="CustomerEmail" class="form-control form-control-lg" type="email" />
+                                <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CustomerPhone" class="form-label fw-bold"></label>
+                                <input asp-for="CustomerPhone" class="form-control form-control-lg" />
+                                <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thông tin giao hàng -->
+                <div class="card mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="fas fa-shipping-fast me-2"></i>Thông tin giao hàng
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="ShippingAddress" class="form-label fw-bold"></label>
+                            <textarea asp-for="ShippingAddress" class="form-control" rows="3"
+                                      placeholder="Nhập địa chỉ giao hàng chi tiết (số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố)"></textarea>
+                            <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Notes" class="form-label fw-bold"></label>
+                            <textarea asp-for="Notes" class="form-control" rows="2"
+                                      placeholder="Ghi chú thêm cho đơn hàng (không bắt buộc)"></textarea>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phương thức thanh toán -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-money-bill-wave me-2"></i>Phương thức thanh toán
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod"
+                                           value="@BanHang.Models.PaymentMethod.CashOnDelivery" id="cod" checked>
+                                    <label class="form-check-label" for="cod">
+                                        <i class="fas fa-money-bill-alt text-success me-2"></i>
+                                        <strong>Thanh toán khi nhận hàng (COD)</strong>
+                                        <br><small class="text-muted">Thanh toán bằng tiền mặt khi nhận hàng</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="radio" asp-for="PaymentMethod"
+                                           value="@BanHang.Models.PaymentMethod.BankTransfer" id="bank">
+                                    <label class="form-check-label" for="bank">
+                                        <i class="fas fa-university text-primary me-2"></i>
+                                        <strong>Chuyển khoản ngân hàng</strong>
+                                        <br><small class="text-muted">Chuyển khoản qua ngân hàng</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Điều khoản -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="acceptTerms" required>
+                            <label class="form-check-label" for="acceptTerms">
+                                Tôi đồng ý với <a href="#" class="text-decoration-none">điều khoản và điều kiện</a>
+                                của cửa hàng và xác nhận thông tin đặt hàng là chính xác.
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nút đặt hàng -->
+                <div class="text-center mb-4">
+                    <button type="submit" class="btn btn-success btn-lg px-5 me-3">
+                        <i class="fas fa-check-circle me-2"></i>Đặt hàng ngay
+                    </button>
+                    <a href="@Url.Action("Index", "ShoppingCart")" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tóm tắt đơn hàng -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-receipt me-2"></i>Tóm tắt đơn hàng
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Danh sách sản phẩm -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold">Sản phẩm đã chọn:</h6>
+                            @foreach (var item in Model.Cart.Items)
+                            {
+                                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded">
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl" alt="@item.Name" class="me-2 rounded" style="width: 40px; height: 40px; object-fit: cover;">
+                                    }
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold small">@item.Name</div>
+                                        <div class="text-muted small">@item.Quantity x @item.Price.ToString("N0") VNĐ</div>
+                                    </div>
+                                    <div class="fw-bold text-success">
+                                        @item.TotalPrice.ToString("N0") VNĐ
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <hr>
+
+                        <!-- Tổng kết -->
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tạm tính:</span>
+                            <strong>@Model.SubTotal.ToString("N0") VNĐ</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Phí vận chuyển:</span>
+                            <strong class="text-info">
+                                @if (Model.ShippingFee > 0)
+                                {
+                                    @Model.ShippingFee.ToString("N0")
+                                    <span>VNĐ</span>
+                                }
+                                else
+                                {
+                                    <span class="text-success">Miễn phí</span>
+                                }
+                            </strong>
+                        </div>
+                        @if (Model.DiscountAmount > 0)
+                        {
+                            <div class="d-flex justify-content-between mb-2 text-danger">
+                                <span>Giảm giá:</span>
+                                <strong>-@Model.DiscountAmount.ToString("N0") VNĐ</strong>
+                            </div>
+                        }
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="h5 fw-bold">Tổng cộng:</span>
+                            <strong class="h5 text-success">@Model.TotalAmount.ToString("N0") VNĐ</strong>
+                        </div>
+
+                        <!-- Thông tin vận chuyển -->
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Thông tin vận chuyển:</strong>
+                            <ul class="mb-0 small mt-1">
+                                <li>Giao hàng trong 2-3 ngày làm việc</li>
+                                <li>Miễn phí vận chuyển cho đơn hàng trên 500.000 VNĐ</li>
+                                <li>Hỗ trợ đổi trả trong 7 ngày</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .card-header {
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+    .form-check-input:checked {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('checkoutForm');
+        const submitBtn = form.querySelector('

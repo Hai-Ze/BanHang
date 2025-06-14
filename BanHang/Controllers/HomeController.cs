@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using BanHang.Models;
+using BanHang.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BanHang.Controllers
@@ -7,16 +8,24 @@ namespace BanHang.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IProductRepository _productRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IProductRepository productRepository)
         {
-            _logger = logger;
+            _productRepository = productRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var products = await _productRepository.GetAllAsync();
+            return View(products);
         }
+
+        //public HomeController(ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //}
+
 
         public IActionResult Privacy()
         {

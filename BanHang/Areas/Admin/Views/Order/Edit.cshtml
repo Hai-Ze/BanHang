@@ -1,0 +1,402 @@
+﻿@model BanHang.Models.Order
+
+@{
+    ViewData["Title"] = "Chỉnh sửa đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2 class="text-primary">
+                <i class="fas fa-edit"></i> Chỉnh sửa đơn hàng
+            </h2>
+            <p class="text-muted">
+                Đơn hàng: <strong class="text-dark">@Model.OrderNumber</strong>
+                <span class="badge bg-secondary ms-2">ID: @Model.Id</span>
+            </p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="@Url.Action("Details", "Order", new { id = Model.Id })" class="btn btn-info btn-lg">
+                <i class="fas fa-eye"></i> Xem chi tiết
+            </a>
+            <a href="@Url.Action("Index", "Order")" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-arrow-left"></i> Quay lại
+            </a>
+        </div>
+    </div>
+
+    <!-- Validation errors -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <h5 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i> Có lỗi validation!
+                    </h5>
+                    <ul class="mb-0">
+                        @foreach (var error in ViewData.ModelState)
+                        {
+                            @foreach (var subError in error.Value.Errors)
+                            {
+                                <li><strong>@error.Key:</strong> @subError.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Form chỉnh sửa -->
+        <div class="col-lg-8">
+            <form asp-action="Edit" method="post" id="editOrderForm">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="OrderNumber" />
+                <input type="hidden" asp-for="OrderDate" />
+                <input type="hidden" asp-for="CustomerId" />
+                <input type="hidden" asp-for="TotalAmount" />
+
+                <!-- Thông tin khách hàng -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-user me-2"></i>Thông tin khách hàng
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="CustomerName" class="form-label fw-bold">
+                                    <i class="fas fa-user text-primary me-1"></i>Họ tên khách hàng *
+                                </label>
+                                <input asp-for="CustomerName" class="form-control form-control-lg" required />
+                                <span asp-validation-for="CustomerName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="CustomerEmail" class="form-label fw-bold">
+                                    <i class="fas fa-envelope text-success me-1"></i>Email *
+                                </label>
+                                <input asp-for="CustomerEmail" class="form-control form-control-lg" type="email" required />
+                                <span asp-validation-for="CustomerEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="CustomerPhone" class="form-label fw-bold">
+                                    <i class="fas fa-phone text-warning me-1"></i>Số điện thoại *
+                                </label>
+                                <input asp-for="CustomerPhone" class="form-control form-control-lg" required />
+                                <span asp-validation-for="CustomerPhone" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Status" class="form-label fw-bold">
+                                    <i class="fas fa-info-circle text-info me-1"></i>Trạng thái đơn hàng *
+                                </label>
+                                <select asp-for="Status" asp-items="ViewBag.StatusList" class="form-select form-select-lg" required>
+                                    <option value="">-- Chọn trạng thái --</option>
+                                </select>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ShippingAddress" class="form-label fw-bold">
+                                <i class="fas fa-map-marker-alt text-danger me-1"></i>Địa chỉ giao hàng *
+                            </label>
+                            <textarea asp-for="ShippingAddress" class="form-control" rows="2" required
+                                      placeholder="Nhập địa chỉ giao hàng chi tiết..."></textarea>
+                            <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Notes" class="form-label fw-bold">
+                                <i class="fas fa-sticky-note text-secondary me-1"></i>Ghi chú
+                            </label>
+                            <textarea asp-for="Notes" class="form-control" rows="2"
+                                      placeholder="Ghi chú thêm về đơn hàng (không bắt buộc)..."></textarea>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+
+                        @if (Model.Status == BanHang.Models.OrderStatus.Cancelled)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="CancelReason" class="form-label fw-bold">
+                                    <i class="fas fa-times-circle text-danger me-1"></i>Lý do hủy đơn hàng
+                                </label>
+                                <textarea asp-for="CancelReason" class="form-control" rows="2"
+                                      placeholder="Nhập lý do hủy đơn hàng..."></textarea>
+                                <span asp-validation-for="CancelReason" class="text-danger"></span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Thông tin thanh toán -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-calculator me-2"></i>Thông tin thanh toán
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-shopping-cart text-primary me-1"></i>Tổng tiền hàng
+                                    </label>
+                                    <div class="input-group input-group-lg">
+                                        <input type="text" class="form-control" value="@Model.TotalAmount.ToString("N0")" readonly />
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                    <small class="text-muted">Tổng giá trị các sản phẩm (không thể chỉnh sửa)</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="ShippingFee" class="form-label fw-bold">
+                                        <i class="fas fa-truck text-info me-1"></i>Phí vận chuyển
+                                    </label>
+                                    <div class="input-group input-group-lg">
+                                        <input asp-for="ShippingFee" class="form-control" type="number" min="0" step="1000" />
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                    <span asp-validation-for="ShippingFee" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label asp-for="DiscountAmount" class="form-label fw-bold">
+                                        <i class="fas fa-percent text-warning me-1"></i>Giảm giá
+                                    </label>
+                                    <div class="input-group input-group-lg">
+                                        <input asp-for="DiscountAmount" class="form-control" type="number" min="0" step="1000" />
+                                        <span class="input-group-text">VNĐ</span>
+                                    </div>
+                                    <span asp-validation-for="DiscountAmount" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-money-bill-wave text-success me-1"></i>Tổng thanh toán
+                                    </label>
+                                    <div class="input-group input-group-lg">
+                                        <input type="text" class="form-control fw-bold text-success" id="finalAmount"
+                                               value="@Model.FinalAmount.ToString("N0")" readonly />
+                                        <span class="input-group-text bg-success text-white">VNĐ</span>
+                                    </div>
+                                    <small class="text-muted">Tự động tính toán</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nút submit -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-lg me-3">
+                        <i class="fas fa-save me-2"></i>Lưu thay đổi
+                    </button>
+                    <a href="@Url.Action("Details", "Order", new { id = Model.Id })" class="btn btn-info btn-lg me-2">
+                        <i class="fas fa-eye me-2"></i>Xem chi tiết
+                    </a>
+                    <a href="@Url.Action("Index", "Order")" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sidebar thông tin -->
+        <div class="col-lg-4">
+            <!-- Thông tin hiện tại -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Thông tin hiện tại
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="info-item mb-3">
+                        <strong class="text-primary">Mã đơn hàng:</strong>
+                        <div>@Model.OrderNumber</div>
+                    </div>
+                    <div class="info-item mb-3">
+                        <strong class="text-success">Ngày đặt:</strong>
+                        <div>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    <div class="info-item mb-3">
+                        <strong class="text-warning">Trạng thái hiện tại:</strong>
+                        <div>
+                            @{
+                                string statusText = Model.Status switch
+                                {
+                                    BanHang.Models.OrderStatus.Pending => "Chờ xác nhận",
+                                    BanHang.Models.OrderStatus.Confirmed => "Đã xác nhận",
+                                    BanHang.Models.OrderStatus.Processing => "Đang chuẩn bị",
+                                    BanHang.Models.OrderStatus.Shipping => "Đang giao hàng",
+                                    BanHang.Models.OrderStatus.Delivered => "Đã giao hàng",
+                                    BanHang.Models.OrderStatus.Cancelled => "Đã hủy",
+                                    BanHang.Models.OrderStatus.Returned => "Hoàn trả",
+                                    _ => Model.Status.ToString()
+                                };
+                            }
+                            <span class="badge bg-info">@statusText</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <strong class="text-info">Số sản phẩm:</strong>
+                        <div>
+                            @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                            {
+                                <span class="badge bg-success">@Model.OrderDetails.Count sản phẩm</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">0 sản phẩm</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hướng dẫn -->
+            <div class="card border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Hướng dẫn chỉnh sửa
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0 small">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Có thể chỉnh sửa thông tin khách hàng
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Có thể thay đổi trạng thái đơn hàng
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success me-2"></i>
+                            Có thể điều chỉnh phí vận chuyển và giảm giá
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            Không thể thay đổi sản phẩm trong đơn hàng
+                        </li>
+                        <li class="mb-0">
+                            <i class="fas fa-exclamation text-warning me-2"></i>
+                            Thay đổi sẽ được lưu vĩnh viễn
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    }
+
+    .card-header {
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+    .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+    .info-item {
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #f1f3f4;
+    }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+    media (max-width: 768px) {
+        .btn
+
+    {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const shippingFeeInput = document.querySelector('input[name="ShippingFee"]');
+        const discountAmountInput = document.querySelector('input[name="DiscountAmount"]');
+        const totalAmountInput = document.querySelector('input[name="TotalAmount"]');
+        const finalAmountInput = document.getElementById('finalAmount');
+
+        function calculateFinalAmount() {
+            const totalAmount = parseFloat(totalAmountInput.value) || 0;
+            const shippingFee = parseFloat(shippingFeeInput.value) || 0;
+            const discountAmount = parseFloat(discountAmountInput.value) || 0;
+
+            const finalAmount = totalAmount + shippingFee - discountAmount;
+            finalAmountInput.value = finalAmount.toLocaleString('vi-VN');
+        }
+
+        // Tính toán khi thay đổi phí vận chuyển hoặc giảm giá
+        if (shippingFeeInput) {
+            shippingFeeInput.addEventListener('input', calculateFinalAmount);
+        }
+        if (discountAmountInput) {
+            discountAmountInput.addEventListener('input', calculateFinalAmount);
+        }
+
+        // Tính toán lần đầu
+        calculateFinalAmount();
+
+        // Form submission
+        const form = document.getElementById('editOrderForm');
+        form.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang lưu...';
+            submitBtn.disabled = true;
+        });
+    });
+</script>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
